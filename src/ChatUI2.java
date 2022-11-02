@@ -54,6 +54,7 @@ public class ChatUI2 extends Application {
         primaryStage.setMinWidth(300);
         primaryStage.setMinHeight(500);
         primaryStage.show();
+        System.out.println("Hi");
     }
 
     @FXML
