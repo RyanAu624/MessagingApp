@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ScrollBar?>
+<?import javafx.scene.control.TextArea?>
+<?import javafx.scene.control.TitledPane?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+<TitledPane fx:id="ChatPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" text="ChatRoom" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1">
+   <content>
+      <BorderPane prefHeight="200.0" prefWidth="200.0">
+         <bottom>
+            <HBox prefHeight="100.0" prefWidth="200.0" BorderPane.alignment="CENTER">
+               <children>
+                  <TextArea fx:id="Input_message" prefHeight="100.0" prefWidth="479.0" />
+                  <VBox prefHeight="200.0" prefWidth="100.0">
+                     <children>
+                        <Button fx:id="btnEmjoli" mnemonicParsing="false" prefHeight="51.0" prefWidth="100.0" text="Emjoli">
+                           <font>
+                              <Font size="22.0" />
+                           </font>
+                        </Button>
+                        <Button fx:id="btnChatEnter" mnemonicParsing="false" prefHeight="50.0" prefWidth="100.0" text="Enter">
+                           <font>
+                              <Font size="22.0" />
+                           </font>
+                        </Button>
+                     </children>
+                  </VBox>
+               </children>
+            </HBox>
+         </bottom>
+         <top>
+            <Pane prefHeight="248.0" prefWidth="579.0" BorderPane.alignment="CENTER">
+               <children>
+                  <ScrollBar fx:id="chatScroll" layoutX="565.0" orientation="VERTICAL" prefHeight="248.0" prefWidth="14.0" />
+               </children>
+            </Pane>
+         </top>
+      </BorderPane>
+   </content>
+</TitledPane>
