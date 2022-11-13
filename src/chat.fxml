@@ -4,30 +4,23 @@
 <?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.BorderPane?>
-<?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 
-
-<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="450.0" prefWidth="300.0" xmlns:fx="http://javafx.com/fxml">
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="320.0" xmlns:fx="http://javafx.com/fxml">
    <center>
-      <ScrollPane fx:id="scrollPane" prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER">
+      <ScrollPane fx:id="scrollPane" fitToHeight="true" fitToWidth="true" prefHeight="374.0" prefWidth="460.0" BorderPane.alignment="CENTER">
          <content>
-            <VBox fx:id="vBox_messages" prefHeight="410.0" prefWidth="298.0" />
+            <VBox fx:id="messagePane" />
          </content>
       </ScrollPane>
    </center>
    <bottom>
-      <BorderPane prefHeight="26.0" prefWidth="300.0" BorderPane.alignment="CENTER">
+      <BorderPane prefHeight="25.0" prefWidth="300.0" BorderPane.alignment="CENTER">
          <center>
-            <TextField fx:id="tf_message" prefHeight="26.0" prefWidth="199.0" BorderPane.alignment="CENTER" />
+            <TextField fx:id="txtInput" BorderPane.alignment="CENTER" />
          </center>
          <right>
-            <HBox prefHeight="71.0" prefWidth="108.0" BorderPane.alignment="CENTER">
-               <children>
-                  <Button fx:id="button_enter" mnemonicParsing="false" prefHeight="26.0" prefWidth="60.0" text="Enter" />
-                  <Button fx:id="button_file" mnemonicParsing="false" prefHeight="26.0" prefWidth="62.0" text="File" />
-               </children>
-            </HBox>
+            <Button fx:id="btnFile" mnemonicParsing="false" prefHeight="26.0" prefWidth="46.0" text="File" BorderPane.alignment="CENTER" />
          </right>
       </BorderPane>
    </bottom>
