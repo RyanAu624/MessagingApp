@@ -30,7 +30,7 @@ public class ServerV2 {
             if(str[0].equals("login")) {
                // for (int i = 0; i < str.length; i++)
                     //System.out.println("message=" + str[i]);
-                 if(str[3].equals("aaa")&&str[4].equals("123456")){
+                 if(str[1].equals("aaa")&&str[2].equals("123456")){
                      DataOutputStream out = new DataOutputStream(s.getOutputStream());
                      out.writeUTF("true");
                      out.flush();

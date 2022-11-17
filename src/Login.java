@@ -97,7 +97,7 @@ public class Login extends Application {
         Socket loginSocket = new Socket(ip, port);
         //send user input data to server
         DataOutputStream out = new DataOutputStream(loginSocket.getOutputStream());
-        out.writeUTF("login "+ myIp.getHostAddress()+" "+myPort+" "+inputedId+" "+inputedPassword);
+        out.writeUTF("login "/*+ myIp.getHostAddress()+" "+myPort+" "*/+inputedId+" "+inputedPassword);
         out.flush();
 
 
