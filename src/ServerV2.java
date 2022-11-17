@@ -34,7 +34,7 @@ public class ServerV2 {
                      DataOutputStream out = new DataOutputStream(s.getOutputStream());
                      out.writeUTF("true");
                      out.flush();
-                     System.out.print("logined");
+                     System.out.println("logined");
                  }else {
                      DataOutputStream out = new DataOutputStream(s.getOutputStream());
                      out.writeUTF("false");
