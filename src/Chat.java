@@ -17,8 +17,12 @@ import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.PrintWriter;
 import java.net.DatagramSocket;
+import java.net.Socket;
 
 public class Chat extends Application {
     ObservableList<Node> children;
@@ -38,7 +42,6 @@ public class Chat extends Application {
     @FXML
     private VBox messagePane;
 
-
     @Override
     public void start(Stage primaryStage) throws IOException {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("Chat.fxml"));
@@ -53,6 +56,23 @@ public class Chat extends Application {
 
     @FXML
     protected void initialize() {
+
+//        Thread t = new Thread(() -> {
+//            try {
+//                Socket socket = new Socket("localhost", 1024);
+//
+//                BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+//
+//                String receivedMessage = in.readLine();
+//                children.add(serverMessageNode(receivedMessage));
+//                msgIndex = (msgIndex + 1) % 2;
+//
+//            } catch (IOException e) {
+//                throw new RuntimeException(e);
+//            }
+//        });
+//        t.start();
+
         children = messagePane.getChildren();
 
         messagePane.heightProperty().addListener(event -> {
@@ -61,7 +81,7 @@ public class Chat extends Application {
 
         txtInput.setOnKeyPressed(event -> {
             if (event.getCode().toString().equals("ENTER"))
-                displayMessage();
+                displaySenderMessage();
 
         });
 
@@ -70,16 +90,6 @@ public class Chat extends Application {
     }
 
     private Node clientMessageNode(String text) {
-//        HBox box = new HBox();
-//        box.paddingProperty().setValue(new Insets(10, 10, 10, 10));
-//
-//        if (alignToRight)
-//            box.setAlignment(Pos.BASELINE_RIGHT);
-//        javafx.scene.control.Label label = new Label(text);
-//        label.setWrapText(true);
-//        box.getChildren().add(label);
-//        return box;
-
         HBox hbox = new HBox();
         hbox.setAlignment(Pos.CENTER_RIGHT);
         hbox.setPadding(new Insets(5, 5, 5, 10));
@@ -94,13 +104,49 @@ public class Chat extends Application {
         return hbox;
     }
 
-    private void displayMessage() {
+    private Node serverMessageNode(String text) {
+        HBox hbox = new HBox();
+        hbox.setAlignment(Pos.CENTER_LEFT);
+        hbox.setPadding(new Insets(5, 10, 5, 5));
+
+        javafx.scene.control.Label label = new Label(text);
+        label.setStyle("-fx-background-color: #FFFFFF");
+        label.setPadding(new Insets(5, 10, 5, 10));
+        label.setWrapText(true);
+        hbox.getChildren().add(label);
+
+        return hbox;
+    }
+
+    public void displayReceiveMessage(String text) {
+        Platform.runLater(() -> {
+
+            if (!text.isEmpty()) {
+                txtInput.clear();
+                children.add(serverMessageNode(text));
+                msgIndex = (msgIndex + 1) % 2;
+            }
+        });
+    }
+
+    private void displaySenderMessage() {
         Platform.runLater(() -> {
             String text = txtInput.getText();
             if (!text.isEmpty()) {
                 txtInput.clear();
                 children.add(clientMessageNode(text));
                 msgIndex = (msgIndex + 1) % 2;
+                try {
+                    Socket socket = new Socket("localhost", 1024);
+
+                    PrintWriter out = new PrintWriter(socket.getOutputStream());
+
+                    out.println(text);
+                    out.flush();
+
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
             }
         });
 

@@ -1,41 +1,32 @@
 import javax.imageio.IIOException;
 import javax.security.sasl.SaslServer;
+import java.io.BufferedReader;
 import java.io.IOException;
-import java.net.DatagramPacket;
-import java.net.DatagramSocket;
-import java.net.InetAddress;
-import java.net.SocketException;
+import java.io.InputStreamReader;
+import java.io.PrintWriter;
+import java.net.*;
 
 public class Server {
-     private DatagramSocket datagramSocket;
+    public static void main(String[] args) {
 
-     private byte[] buffer = new byte[256];
+        try {
+            ServerSocket serverSocket = new ServerSocket(1024);
+            System.out.println("Server is running...");
 
-     public Server(DatagramSocket datagramSocket) {
-         this.datagramSocket = datagramSocket;
-     }
+            while (true) {
+                Socket socket = serverSocket.accept();
+                BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+                String receiveMessage = in.readLine();
+                System.out.println("Received Message: " + receiveMessage);
 
-     public void receiveThenSend() {
-         while (true) {
-             try {
-                 DatagramPacket datagramPacket = new DatagramPacket(buffer, buffer.length);
-                 datagramSocket.receive(datagramPacket);
-                 InetAddress inetAddress = datagramPacket.getAddress();
-                 int port = datagramPacket.getPort();
-                 String messageFromClient = new String(datagramPacket.getData(), 0, datagramPacket.getLength());
-                 System.out.println("Message from client: " + messageFromClient);
-                 datagramPacket = new DatagramPacket(buffer, buffer.length, inetAddress, port);
-                 datagramSocket.send(datagramPacket);
-             } catch (IOException e) {
-                 e.printStackTrace();
-                 break;
-             }
-         }
-     }
+                PrintWriter out = new PrintWriter(socket.getOutputStream());
+                out.println("This data is from server");
+                out.flush();
+            }
 
-     public static void main(String[] args) throws SocketException {
-         DatagramSocket datagramSocket = new DatagramSocket(1234);
-         Server server = new Server(datagramSocket);
-         server.receiveThenSend();
-     }
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+
+    }
 }
