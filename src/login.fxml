@@ -10,12 +10,11 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-
-<BorderPane fx:id="Pane_Login" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1">
+<BorderPane fx:id="Pane_Login" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="LoginController">
    <center>
       <VBox fx:id="vBox_Login" prefHeight="296.0" prefWidth="571.0" BorderPane.alignment="CENTER">
          <children>
-            <HBox prefHeight="100.0" prefWidth="200.0">
+            <HBox fx:id="hbox_userData" prefHeight="100.0" prefWidth="200.0">
                <children>
                   <Label text="Login ID:">
                      <font>
@@ -41,7 +40,7 @@
                   <Insets top="50.0" />
                </VBox.margin>
             </HBox>
-            <HBox prefHeight="100.0" prefWidth="560.0">
+            <HBox fx:id="hbox_Password" prefHeight="100.0" prefWidth="560.0">
                <children>
                   <Label text="Password:">
                      <font>
