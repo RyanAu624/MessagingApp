@@ -7,9 +7,9 @@
 <?import javafx.scene.text.Font?>
 
 
-<BorderPane fx:id="Pane_Menu" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="273.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1">
+<BorderPane fx:id="Pane_Menu" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="273.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="MenuController">
    <top>
-      <VBox fx:id="VboxMenu" prefHeight="401.0" prefWidth="273.0" BorderPane.alignment="CENTER">
+      <VBox fx:id="Vbox_Menu" prefHeight="401.0" prefWidth="273.0" BorderPane.alignment="CENTER">
          <children>
             <Label fx:id="Label_userName" alignment="CENTER" prefHeight="49.0" prefWidth="273.0" text="UserName">
                <font>
