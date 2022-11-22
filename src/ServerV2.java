@@ -33,7 +33,10 @@ public class ServerV2 {
             String[] str = dis.readUTF().split(" ");
 
             if(str[0].equals("login")) {
-                checkLogin(s, str[1], str[2]);
+                boolean loginState = checkLogin(s, str[1], str[2]);
+                if(loginState == true) {
+                    noteClientIP(str[1], str[3]);
+                }
             }else if (str[0].equals("chat")) {
                 receiveThenSend(s, str[1], str[2], str[3]);
             } else if (str[0].equals("createChatRoom")) {
@@ -48,14 +51,19 @@ public class ServerV2 {
 
     }
 
+    public static void noteClientIP(String username, String clientIP) {
+        //Add username and clientIP to JSON
+        System.out.println(username + clientIP);
+    }
+
     public static void receiveThenSend(Socket s, String senderName, String receiveName, String message) throws IOException {
 //        DataOutputStream out = new DataOutputStream(s.getOutputStream());
 //        out.writeUTF(message);
 //        out.flush();
-        System.out.println(senderName + message + receiveName);
+        System.out.println(senderName + "    " + message + "    " + receiveName);
     }
 
-    public static void checkLogin(Socket s, String username, String passwd) throws IOException, ParseException {
+    public static boolean checkLogin(Socket s, String username, String passwd) throws IOException, ParseException {
         DataOutputStream out = new DataOutputStream(s.getOutputStream());
         JSONParser jsonParser = new JSONParser();
         FileReader reader = new FileReader("./src/user.json");
@@ -76,10 +84,12 @@ public class ServerV2 {
             out.writeUTF("true");
             out.flush();
             System.out.println("logined");
+            return true;
         } else {
             out.writeUTF("false");
             out.flush();
             System.out.println("Fail to login");
+            return false;
         }
     }
 

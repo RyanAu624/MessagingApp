@@ -74,14 +74,12 @@ public class LoginController implements Initializable {
 
         out.flush();
 
-
         //receive true or false from server
         DataInputStream dis = new DataInputStream(loginSocket.getInputStream());
         String str = dis.readUTF();
         System.out.println(str);
         loginSocket.close();
         return(str);
-
     }
 
     public void loadStage(String fxml){

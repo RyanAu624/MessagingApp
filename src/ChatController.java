@@ -58,7 +58,7 @@ public class ChatController implements Initializable {
         txtInput.setOnKeyPressed(event -> {
             if (event.getCode().toString().equals("ENTER"))
                 displaySenderMessage();
-                System.out.println("This is "+getID());
+                System.out.println("This is "+getReceiveName());
 
         });
 
@@ -117,7 +117,9 @@ public class ChatController implements Initializable {
                     Socket socket = new Socket("127.0.0.1", 235);
                     DataOutputStream out = new DataOutputStream(socket.getOutputStream());
 
-                    out.writeUTF("chat " + "senderNameee" + " " + "receiveNameee" + " " + text);
+                    String receiveName = getReceiveName();
+
+                    out.writeUTF("chat " + "senderNameee" + " " + receiveName + " " + text);
                     out.flush();
 
                 } catch (IOException e) {
@@ -128,11 +130,11 @@ public class ChatController implements Initializable {
 
     }
 
-    public static void setID(String ID){
-         talkTo = ID;
+    public static void setID(String receiveName){
+         talkTo = receiveName;
     }
 
-    public String getID(){
+    public String getReceiveName(){
         return talkTo;
     }
 }

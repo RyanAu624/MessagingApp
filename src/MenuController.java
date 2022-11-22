@@ -80,7 +80,6 @@ public class MenuController implements Initializable {
 //            stage.initModality(Modality.APPLICATION_MODAL);
             stage.show();
             if(fxml.equals("chat.fxml")){
-                //stage.setTitle(ID);
                 ChatController.setID(ID);
             }
         }catch (IOException e){
