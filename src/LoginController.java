@@ -58,16 +58,19 @@ public class LoginController implements Initializable {
             }    });
     }
     public String checkLogin() throws IOException {
-        String ip = "127.0.0.1"; // ip for server
-        //myIp = InetAddress.getLocalHost();
-        //myPort = 666;
-        int port = 235; // how to get port?
+        String ip = "127.0.0.1";
+        int port = 235;
+        Socket loginSocket = new Socket(ip, port);
+
+        InetAddress myIp = InetAddress.getLocalHost();
+        String myIPStr = myIp.getHostAddress();
+
         String inputedId = inputID.getText();
         String inputedPassword = InputPassword.getText();
-        Socket loginSocket = new Socket(ip, port);
+
         //send user input data to server
         DataOutputStream out = new DataOutputStream(loginSocket.getOutputStream());
-        out.writeUTF("login "/*+ myIp.getHostAddress()+" "+myPort+" "*/+inputedId+" "+inputedPassword);
+        out.writeUTF("login " + inputedId + " " + inputedPassword + " " + myIPStr);
 
         out.flush();
 
