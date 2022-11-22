@@ -14,6 +14,7 @@ import java.io.IOException;
 import java.net.InetAddress;
 import java.net.Socket;
 import java.net.URL;
+import java.util.Optional;
 import java.util.ResourceBundle;
 
 
@@ -32,65 +33,79 @@ public class MenuController implements Initializable {
 
         btn_addNewChat.setOnMouseClicked(event -> {
             System.out.println("Clicked");
-            loadStage("chat.fxml");
-            //Send Detail to Server
-//            try {
-//                String stateForCheck = checkLogin();
-//                if(stateForCheck.equals("true")){
-//                    // screenController.activate("menu");
-//                    System.out.println("TRUE");
-//                    loadStage("menu.fxml");
-//                    closeStage();
+            TextInputDialog dialog = new TextInputDialog("");
+            dialog.setTitle("Chat with who");
+            dialog.setHeaderText("OPEN NEW CHAT ROOM");
+            dialog.setContentText("Please enter ID here:");
+            String correctIDOrNot="false";
+            // Traditional way to get the response value.
+            Optional<String> result = dialog.showAndWait();
+            String inputedID = dialog.getEditor().getText();
+            if (result.isPresent()) {
+                //send socket to server
+                try {
+                    correctIDOrNot = askForCreateChatRoom(inputedID);
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
+
+                // if(inputedID.equals("aaa")){
+//                    System.out.println("True");
+//                    correctIDOrNot = "true";
 //                }else{
 //                    Alert a = new Alert(Alert.AlertType.NONE);
 //                    a.setAlertType(Alert.AlertType.WARNING);
-//                    a.setContentText("ID or Password is WONG!");
+//                    a.setContentText("ID  is WRONG!");
 //                    a.show();
 //                }
-//            } catch (IOException e) {
-//                throw new RuntimeException(e);
-//           }
+
+                //if true, open new chat room
+                if (correctIDOrNot.equals("true")) {
+                    loadStage("chat.fxml", inputedID);
+                } else {
+                    Alert a = new Alert(Alert.AlertType.NONE);
+                    a.setAlertType(Alert.AlertType.WARNING);
+                    a.setContentText("ID  is WRONG!");
+                    a.show();
+                }
+            }
         });
     }
-//    public String checkLogin() throws IOException {
-//        String ip = "127.0.0.1"; // ip for server
-//        //myIp = InetAddress.getLocalHost();
-//        //myPort = 666;
-//        int port = 235; // how to get port?
-//        String inputedId = inputID.getText();
-//        String inputedPassword = InputPassword.getText();
-//        Socket loginSocket = new Socket(ip, port);
-//        //send user input data to server
-//        DataOutputStream out = new DataOutputStream(loginSocket.getOutputStream());
-//        out.writeUTF("login "/*+ myIp.getHostAddress()+" "+myPort+" "*/+inputedId+" "+inputedPassword);
-//
-//        out.flush();
-//
-//
-//        //receive true or false from server
-//        DataInputStream dis = new DataInputStream(loginSocket.getInputStream());
-//        String str = dis.readUTF();
-//        System.out.println(str);
-//        loginSocket.close();
-//        return(str);
-//
-//    }
 
-    public void loadStage(String fxml){
+    public void loadStage(String fxml, String ID){
         try{
             Parent root = FXMLLoader.load(getClass().getResource(fxml));
             Stage stage = new Stage();
             stage.setScene(new Scene(root));
 //            stage.initModality(Modality.APPLICATION_MODAL);
             stage.show();
+            if(fxml.equals("chat.fxml")){
+                //stage.setTitle(ID);
+                ChatController.setID(ID);
+            }
         }catch (IOException e){
             e.printStackTrace();
         }
     }
 
-//    public void closeStage(){
-//        Stage stage = (Stage) btnUserEnter.getScene().getWindow();
-//        stage.close();
-//    }
+    private String askForCreateChatRoom(String inputedID) throws IOException {
+        String ip = "127.0.0.1";
+        int port = 235;
+        Socket createSocket = new Socket(ip, port);
 
+//        InetAddress myIp = InetAddress.getLocalHost();
+//        String myIPStr = myIp.getHostAddress();
+
+        //send user input data to server
+        DataOutputStream out = new DataOutputStream(createSocket.getOutputStream());
+        out.writeUTF("createChatRoom " + inputedID);
+        out.flush();
+
+        //receive true or false from server
+        DataInputStream dis = new DataInputStream(createSocket.getInputStream());
+        String str = dis.readUTF();
+        System.out.println(str);
+        createSocket.close();
+        return(str);
+    }
 }

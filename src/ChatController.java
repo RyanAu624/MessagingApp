@@ -30,6 +30,7 @@ public class ChatController implements Initializable {
     @FXML
     private VBox messagePane;
 
+    private static String talkTo="";
     @FXML
     public void initialize(URL location, ResourceBundle resources) {
 
@@ -57,6 +58,7 @@ public class ChatController implements Initializable {
         txtInput.setOnKeyPressed(event -> {
             if (event.getCode().toString().equals("ENTER"))
                 displaySenderMessage();
+                System.out.println("This is "+getID());
 
         });
 
@@ -124,5 +126,13 @@ public class ChatController implements Initializable {
             }
         });
 
+    }
+
+    public static void setID(String ID){
+         talkTo = ID;
+    }
+
+    public String getID(){
+        return talkTo;
     }
 }
