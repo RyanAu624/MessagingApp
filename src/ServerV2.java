@@ -36,6 +36,9 @@ public class ServerV2 {
                 checkLogin(s, str[1], str[2]);
             }else if (str[0].equals("chat")) {
                 receiveThenSend(s, str[1], str[2], str[3]);
+            } else if (str[0].equals("createChatRoom")) {
+
+
             }else {
                 System.out.println("wong message type");
             }
