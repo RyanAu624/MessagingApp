@@ -1,7 +1,13 @@
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
+
 import javax.imageio.IIOException;
 import javax.security.sasl.SaslServer;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
+import java.io.FileReader;
 import java.io.IOException;
 import java.net.*;
 
@@ -16,7 +22,7 @@ public class ServerV2 {
     }
 
 
-    public static void main(String[] args) throws IOException {
+    public static void main(String[] args) throws IOException, ParseException {
        byte[] buffer = new byte[1024];
        System.out.println("Server started");
        while(true){
@@ -46,9 +52,24 @@ public class ServerV2 {
         System.out.println(senderName + message + receiveName);
     }
 
-    public static void checkLogin(Socket s, String username, String passwd) throws IOException {
+    public static void checkLogin(Socket s, String username, String passwd) throws IOException, ParseException {
         DataOutputStream out = new DataOutputStream(s.getOutputStream());
-        if(username.equals("aaa") && passwd.equals("123456")) {
+        JSONParser jsonParser = new JSONParser();
+        FileReader reader = new FileReader("./src/user.json");
+        Object obj = jsonParser.parse(reader);
+        JSONObject userjsonobj = (JSONObject) obj;
+        JSONArray array = (JSONArray) userjsonobj.get("user");
+        String foundData = "f";
+        for (int i=0;i<array.size();i++){
+            JSONObject user = (JSONObject) array.get(i);
+            String name = (String) user.get("name");
+            String password = (String) user.get("password");
+            if(username.equals(name) && passwd.equals(password)) {
+                foundData = "t";
+                break;
+            }
+        }
+        if(foundData.equals("t")) {
             out.writeUTF("true");
             out.flush();
             System.out.println("logined");
