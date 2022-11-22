@@ -25,32 +25,31 @@ public class ServerV2 {
             System.out.println("Connected");
             DataInputStream dis = new DataInputStream(s.getInputStream());
             String[] str = dis.readUTF().split(" ");
-            //dis.close();
 
             if(str[0].equals("login")) {
-               // for (int i = 0; i < str.length; i++)
-                    //System.out.println("message=" + str[i]);
-                 if(str[1].equals("aaa")&&str[2].equals("123456")){
-                     DataOutputStream out = new DataOutputStream(s.getOutputStream());
-                     out.writeUTF("true");
-                     out.flush();
-                     System.out.println("logined");
-                 }else {
-                     DataOutputStream out = new DataOutputStream(s.getOutputStream());
-                     out.writeUTF("false");
-                     out.flush();
-                     System.out.println("Fail to login");
-                 }
-                 chatServer.close();
-            }else if (str[0].equals("chat")){
+                checkLogin(s, str[1], str[2]);
+            }else if (str[0].equals("chat")) {
 
             }else {
                 System.out.println("wong message type");
             }
-                chatServer.close();
+
+            chatServer.close();
         }
 
     }
 
+    public static void checkLogin(Socket s, String username, String passwd) throws IOException {
+        DataOutputStream out = new DataOutputStream(s.getOutputStream());
+        if(username.equals("aaa") && passwd.equals("123456")) {
+            out.writeUTF("true");
+            out.flush();
+            System.out.println("logined");
+        } else {
+            out.writeUTF("false");
+            out.flush();
+            System.out.println("Fail to login");
+        }
+    }
 
 }
