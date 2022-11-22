@@ -3,6 +3,7 @@ import javafx.application.Platform;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.fxml.Initializable;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
@@ -17,22 +18,15 @@ import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.PrintWriter;
+import java.io.*;
 import java.net.DatagramSocket;
 import java.net.Socket;
+import java.net.URL;
+import java.util.ResourceBundle;
 
-public class Chat extends Application {
+public class Chat implements Initializable {
     ObservableList<Node> children;
     int msgIndex = 0;
-
-    private String ip = "127.0.0.1";
-    private int port = 1234;
-
-    DatagramSocket socket;
-
     @FXML
     private ScrollPane scrollPane;
     @FXML
@@ -41,21 +35,21 @@ public class Chat extends Application {
     private Button btnFile;
     @FXML
     private VBox messagePane;
-
-    @Override
-    public void start(Stage primaryStage) throws IOException {
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("Chat.fxml"));
-        loader.setController(this);
-        Parent root = loader.load();
-        primaryStage.setScene(new Scene(root));
-        primaryStage.setTitle("Chat");
-        primaryStage.setMinWidth(300);
-        primaryStage.setMinHeight(500);
-        primaryStage.show();
-    }
+//
+//    @Override
+//    public void start(Stage primaryStage) throws IOException {
+//        FXMLLoader loader = new FXMLLoader(getClass().getResource("chat.fxml"));
+//        loader.setController(this);
+//        Parent root = loader.load();
+//        primaryStage.setScene(new Scene(root));
+//        primaryStage.setTitle("Chat");
+//        primaryStage.setMinWidth(300);
+//        primaryStage.setMinHeight(500);
+//        primaryStage.show();
+//    }
 
     @FXML
-    protected void initialize() {
+    public void initialize(URL location, ResourceBundle resources) {
 
 //        Thread t = new Thread(() -> {
 //            try {
@@ -137,12 +131,15 @@ public class Chat extends Application {
                 children.add(clientMessageNode(text));
                 msgIndex = (msgIndex + 1) % 2;
                 try {
-                    Socket socket = new Socket("localhost", 1024);
+                    Socket socket = new Socket("127.0.0.1", 235);
 
-                    PrintWriter out = new PrintWriter(socket.getOutputStream());
+//                    PrintWriter out = new PrintWriter(socket.getOutputStream());
+//
+//                    out.println(text);
+//                    out.flush();
 
-                    out.println(text);
-                    out.flush();
+                    DataOutputStream out = new DataOutputStream(socket.getOutputStream());
+                    out.writeUTF("chat " + "senderNameee" + " " + "receiveNameee" + " " + text);
 
                 } catch (IOException e) {
                     throw new RuntimeException(e);
@@ -152,7 +149,7 @@ public class Chat extends Application {
 
     }
 
-    public static void main(String[] args) {
-        launch(args);
-    }
+//    public static void main(String[] args) {
+//        launch(args);
+//    }
 }

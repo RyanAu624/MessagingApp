@@ -29,7 +29,7 @@ public class ServerV2 {
             if(str[0].equals("login")) {
                 checkLogin(s, str[1], str[2]);
             }else if (str[0].equals("chat")) {
-
+                receiveThenSend(s, str[1], str[2], str[3]);
             }else {
                 System.out.println("wong message type");
             }
@@ -37,6 +37,13 @@ public class ServerV2 {
             chatServer.close();
         }
 
+    }
+
+    public static void receiveThenSend(Socket s, String senderName, String receiveName, String message) throws IOException {
+//        DataOutputStream out = new DataOutputStream(s.getOutputStream());
+//        out.writeUTF(message);
+//        out.flush();
+        System.out.println(senderName + message + receiveName);
     }
 
     public static void checkLogin(Socket s, String username, String passwd) throws IOException {
