@@ -42,6 +42,9 @@ public class ServerV2 {
             } else if (str[0].equals("createChatRoom")) {
 
 
+            }else if (str[0].equals("NewAC")) {
+                
+
             }else {
                 System.out.println("wong message type");
             }
