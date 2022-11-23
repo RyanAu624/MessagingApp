@@ -13,7 +13,7 @@ import javafx.stage.Stage;
 
         @Override
         public void start(Stage primaryStage) throws Exception{
-            Parent root = FXMLLoader.load(getClass().getResource("login.fxml"));
+            Parent root = FXMLLoader.load(getClass().getResource("login2.fxml"));
             primaryStage.setScene(new Scene(root));
             primaryStage.setTitle("Login Page");
             primaryStage.setMinWidth(300);
