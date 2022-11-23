@@ -5,11 +5,10 @@ import org.json.simple.parser.ParseException;
 
 import javax.imageio.IIOException;
 import javax.security.sasl.SaslServer;
-import java.io.DataInputStream;
-import java.io.DataOutputStream;
-import java.io.FileReader;
-import java.io.IOException;
+import java.io.*;
 import java.net.*;
+import java.util.HashMap;
+import java.util.Map;
 
 public class ServerV2 {
 
@@ -54,8 +53,40 @@ public class ServerV2 {
 
     }
 
-    public static void noteClientIP(String username, String clientIP) {
+    public static void noteClientIP(String username, String clientIP) throws IOException, ParseException {
         //Add username and clientIP to JSON
+        JSONParser jsonParser = new JSONParser();
+        FileReader reader = new FileReader("./src/login.json");
+
+        Object obj = jsonParser.parse(reader);
+        JSONArray array = (JSONArray) obj;
+        String foundData2 = "f";
+        for (int i=0;i<array.size();i++){
+            JSONObject login = (JSONObject) array.get(i);
+            String name = (String) login.get("name");
+            String ip = (String) login.get("ip");
+            if(username.equals(name) && clientIP.equals(ip)) {
+                foundData2 = "t";
+                break;
+            }
+        }
+        if(foundData2.equals("f")) {
+            JSONObject newObj = new JSONObject();
+            newObj.put("name", username);
+            newObj.put("ip", clientIP);
+            array.add(newObj);
+            try {
+                FileWriter file = new FileWriter("./src/login.json");
+                file.write(array.toJSONString());
+                file.flush();
+                file.close();
+            }catch (IOException e){
+                e.printStackTrace();
+            }
+        } else {
+
+        }
+
         System.out.println(username + clientIP);
     }
 
