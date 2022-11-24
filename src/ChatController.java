@@ -12,10 +12,14 @@ import javafx.scene.control.TextField;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
+import javafx.stage.FileChooser;
+import javafx.stage.Stage;
 
 import java.io.*;
+import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.URL;
+import java.net.UnknownHostException;
 import java.util.ResourceBundle;
 
 public class ChatController implements Initializable {
@@ -34,21 +38,6 @@ public class ChatController implements Initializable {
     @FXML
     public void initialize(URL location, ResourceBundle resources) {
 
-//        Thread t = new Thread(() -> {
-//            try {
-//                Socket socket = new Socket("127.0.0.1", 235);
-//                DataInputStream in = new DataInputStream(socket.getInputStream());
-//                String receivedMessage = in.readUTF();
-//                System.out.println("Receive " + receivedMessage);
-//
-//                children.add(serverMessageNode(receivedMessage));
-//                msgIndex = (msgIndex + 1) % 2;
-//            } catch (IOException e) {
-//                throw new RuntimeException(e);
-//            }
-//        });
-//        t.start();
-
         children = messagePane.getChildren();
 
         messagePane.heightProperty().addListener(event -> {
@@ -58,12 +47,56 @@ public class ChatController implements Initializable {
         txtInput.setOnKeyPressed(event -> {
             if (event.getCode().toString().equals("ENTER"))
                 displaySenderMessage();
-                System.out.println("This is "+getReceiveName());
-
         });
 
         btnFile.setOnMouseClicked(event -> {
+            FileChooser chooser = new FileChooser();
+            Stage stage = new Stage();
+            File file = chooser.showOpenDialog(stage);
+
+            if (file != null) {
+//            dataOutputStream.writeUTF(file.getPath());
+                String path = file.getPath();
+                System.out.println("selected");
+                System.out.println(file.getPath());
+
+                try {
+                    Socket socket = new Socket("127.0.0.1", 235);
+                    DataOutputStream out = new DataOutputStream(socket.getOutputStream());
+
+                    out.writeUTF(path.trim());
+                    out.flush();
+                } catch (UnknownHostException e) {
+                    throw new RuntimeException(e);
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
+
+            }
         });
+
+//        Runnable runnable = () -> {
+//            while (true) {
+//                try {
+//                    ServerSocket chatServer = new ServerSocket(1234);
+//                    Socket s = chatServer.accept();
+//                    System.out.println("Connected");
+//                    DataInputStream dis = new DataInputStream(s.getInputStream());
+//                    String receivedMessage = dis.readUTF();
+//                    System.out.println("Receive " + receivedMessage);
+//
+//                    displayReceiveMessage(receivedMessage);
+//                } catch (IOException e) {
+//                    throw new RuntimeException(e);
+//                }
+//            }
+//        };
+//        Thread t = new Thread(runnable);
+//        t.start();
+    }
+
+    private void getMessageHistory() {
+
     }
 
     private Node clientMessageNode(String text) {
@@ -97,34 +130,35 @@ public class ChatController implements Initializable {
 
     public void displayReceiveMessage(String text) {
         Platform.runLater(() -> {
-
-            if (!text.isEmpty()) {
-                txtInput.clear();
-                children.add(serverMessageNode(text));
-                msgIndex = (msgIndex + 1) % 2;
-            }
+            children.add(serverMessageNode(text));
+            msgIndex = (msgIndex + 1) % 2;
         });
     }
 
     private void displaySenderMessage() {
+
         Platform.runLater(() -> {
             String text = txtInput.getText();
             if (!text.isEmpty()) {
                 txtInput.clear();
                 children.add(clientMessageNode(text));
                 msgIndex = (msgIndex + 1) % 2;
-                try {
-                    Socket socket = new Socket("127.0.0.1", 235);
-                    DataOutputStream out = new DataOutputStream(socket.getOutputStream());
+                Runnable runnable = () -> {
+                    try {
+                        Socket socket = new Socket("127.0.0.1", 235);
+                        DataOutputStream out = new DataOutputStream(socket.getOutputStream());
 
-                    String receiveName = getReceiveName();
+                        String receiveName = getReceiveName();
 
-                    out.writeUTF("chat " + "senderNameee" + " " + receiveName + " " + text);
-                    out.flush();
+                        out.writeUTF("chat " + "senderName" + " " + receiveName + " " + text);
+                        out.flush();
 
-                } catch (IOException e) {
-                    throw new RuntimeException(e);
-                }
+                    } catch (IOException e) {
+                        throw new RuntimeException(e);
+                    }
+                };
+                Thread t = new Thread(runnable);
+                t.start();
             }
         });
 
