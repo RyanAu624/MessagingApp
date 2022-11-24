@@ -3,12 +3,8 @@ import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 
-import javax.imageio.IIOException;
-import javax.security.sasl.SaslServer;
 import java.io.*;
 import java.net.*;
-import java.util.HashMap;
-import java.util.Map;
 
 public class ServerV2 {
 
@@ -39,11 +35,9 @@ public class ServerV2 {
             }else if (str[0].equals("chat")) {
                 receiveThenSend(s, str[1], str[2], str[3]);
             } else if (str[0].equals("createChatRoom")) {
-
-
+                checkName(s,str[1]);
             }else if (str[0].equals("NewAC")) {
-                
-
+                newUser(s, str[1],str[2]);
             }else {
                 System.out.println("wong message type");
             }
@@ -102,8 +96,7 @@ public class ServerV2 {
         JSONParser jsonParser = new JSONParser();
         FileReader reader = new FileReader("./src/user.json");
         Object obj = jsonParser.parse(reader);
-        JSONObject userjsonobj = (JSONObject) obj;
-        JSONArray array = (JSONArray) userjsonobj.get("user");
+        JSONArray array = (JSONArray) obj;
         String foundData = "f";
         for (int i=0;i<array.size();i++){
             JSONObject user = (JSONObject) array.get(i);
@@ -126,5 +119,71 @@ public class ServerV2 {
             return false;
         }
     }
+    public static boolean checkName(Socket s, String username) throws IOException, ParseException {
+        DataOutputStream out = new DataOutputStream(s.getOutputStream());
+        JSONParser jsonParser = new JSONParser();
+        FileReader reader = new FileReader("./src/user.json");
+        Object obj = jsonParser.parse(reader);
+        JSONArray array = (JSONArray) obj;
+        String foundData = "f";
+        for (int i=0;i<array.size();i++){
+            JSONObject user = (JSONObject) array.get(i);
+            String name = (String) user.get("name");
+            if(username.equals(name)) {
+                foundData = "t";
+                break;
+            }
+        }
+        if(foundData.equals("t")) {
+            out.writeUTF("true");
+            out.flush();
+            System.out.println("have user");
+            return true;
+        } else {
+            out.writeUTF("false");
+            out.flush();
+            System.out.println("No user");
+            return false;
+        }
+    }
+    public static void newUser(Socket s, String username, String password) throws IOException, ParseException {
+        //Add username and clientIP to JSON
+        DataOutputStream out = new DataOutputStream(s.getOutputStream());
+        JSONParser jsonParser = new JSONParser();
+        FileReader reader = new FileReader("./src/user.json");
 
+        Object obj = jsonParser.parse(reader);
+        JSONArray array = (JSONArray) obj;
+        String foundData3 = "f";
+        for (int i=0;i<array.size();i++){
+            JSONObject login = (JSONObject) array.get(i);
+            String name = (String) login.get("name");
+            String pswd = (String) login.get("password");
+            if(username.equals(name)) {
+                foundData3 = "t";
+                break;
+            }
+        }
+        if(foundData3.equals("f")) {
+            JSONObject newObj = new JSONObject();
+            newObj.put("name", username);
+            newObj.put("password", password);
+            array.add(newObj);
+            try {
+                FileWriter file = new FileWriter("./src/user.json");
+                file.write(array.toJSONString());
+                file.flush();
+                file.close();
+                out.writeUTF("true");
+                out.flush();
+            }catch (IOException e){
+                e.printStackTrace();
+            }
+        } else {
+            out.writeUTF("false");
+            out.flush();
+        }
+
+        System.out.println(username + password);
+    }
 }
