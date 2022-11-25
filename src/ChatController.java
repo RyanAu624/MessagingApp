@@ -34,7 +34,7 @@ public class ChatController implements Initializable {
     @FXML
     private VBox messagePane;
 
-    private static String talkTo="";
+//    private static String talkTo="";
     @FXML
     public void initialize(URL location, ResourceBundle resources) {
 
@@ -143,32 +143,35 @@ public class ChatController implements Initializable {
                 txtInput.clear();
                 children.add(clientMessageNode(text));
                 msgIndex = (msgIndex + 1) % 2;
-                Runnable runnable = () -> {
-                    try {
-                        Socket socket = new Socket("127.0.0.1", 235);
-                        DataOutputStream out = new DataOutputStream(socket.getOutputStream());
 
-                        String receiveName = getReceiveName();
-
-                        out.writeUTF("chat " + "senderName" + " " + receiveName + " " + text);
-                        out.flush();
-
-                    } catch (IOException e) {
-                        throw new RuntimeException(e);
-                    }
-                };
-                Thread t = new Thread(runnable);
-                t.start();
+                Sender sender = new Sender();
+                sender.sendMessage(text);
+//                Runnable runnable = () -> {
+//                    try {
+//                        Socket socket = new Socket("127.0.0.1", 235);
+//                        DataOutputStream out = new DataOutputStream(socket.getOutputStream());
+//
+//                        String receiveName = getReceiveName();
+//
+//                        out.writeUTF("chat " + "senderName" + " " + receiveName + " " + text);
+//                        out.flush();
+//
+//                    } catch (IOException e) {
+//                        throw new RuntimeException(e);
+//                    }
+//                };
+//                Thread t = new Thread(runnable);
+//                t.start();
             }
         });
 
     }
 
-    public static void setID(String receiveName){
-         talkTo = receiveName;
-    }
-
-    public String getReceiveName(){
-        return talkTo;
-    }
+//    public static void setID(String receiveName){
+//         talkTo = receiveName;
+//    }
+//
+//    public String getReceiveName(){
+//        return talkTo;
+//    }
 }
