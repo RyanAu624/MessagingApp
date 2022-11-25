@@ -74,7 +74,7 @@ public class ChatController implements Initializable {
                     String sender = (String) textObject.get("sender");
                     System.out.println("Sender is "+sender);
                     String oldmessage = (String) textObject.get("text");
-                    if (sender.equals(LoginController.getUserID())) {
+                    if (!sender.equals(LoginController.getUserID())) {
                         displayReceiveMessage(oldmessage);
                     }else{
                         displaySenderOlsMessage(oldmessage);
