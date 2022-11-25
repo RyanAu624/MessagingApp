@@ -165,11 +165,22 @@ public class MenuController implements Initializable {
             stage.setScene(new Scene(root));
 //            stage.initModality(Modality.APPLICATION_MODAL);
             stage.setTitle(ID);
-            stage.show();
             if(fxml.equals("chat.fxml")){
+                ChatController.setHistoryFileName(fileName);
+                ChatController.setWhotoReceive(ID);
                 Sender sender = new Sender();
                 sender.setTalkTo(ID);
-                sender.setHistoryFileName(fileName);
+
+            }
+            stage.show();
+
+            System.out.println(fileName);
+            if(fxml.equals("chat.fxml")){
+                ChatController.setHistoryFileName(fileName);
+                ChatController.setWhotoReceive(ID);
+                Sender sender = new Sender();
+                sender.setTalkTo(ID);
+
             }
         }catch (IOException e){
             e.printStackTrace();
@@ -196,4 +207,5 @@ public class MenuController implements Initializable {
         createSocket.close();
         return(str);
     }
+
 }
