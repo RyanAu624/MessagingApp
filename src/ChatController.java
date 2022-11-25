@@ -13,14 +13,14 @@ import javafx.scene.control.TextField;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
-<<<<<<< HEAD
+
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
-=======
+
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
->>>>>>> Testing
+
 
 import java.io.*;
 import java.net.ServerSocket;
@@ -41,13 +41,10 @@ public class ChatController implements Initializable {
     @FXML
     private VBox messagePane;
 
-<<<<<<< HEAD
     private static String talkTo="";
-
     private static String historyFileName ="";
-=======
     private Sender sender;
->>>>>>> Testing
+
     @FXML
     public void initialize(URL location, ResourceBundle resources) {
 
@@ -60,24 +57,24 @@ public class ChatController implements Initializable {
         });
 
         //display history in start
-        JSONParser jsonParser = new JSONParser();
-        try{
-            FileReader reader = new FileReader("./src/chatHistory/"+historyFileName);
-            Object obj = jsonParser.parse(reader);
-            JSONArray array = (JSONArray) obj;
-            for (int i=0;i<array.size();i++) {
-                JSONObject textObject = (JSONObject) array.get(i);
-                String sender = (String) textObject.get("sender");
-                String text = (String) textObject.get("text");
-                if (sender.equals(talkTo)) {
-                    displayReceiveMessage(text);
-                }else{
-                    displaySenderMessage(text);
-                }
-            }
-        }catch(Exception e){
-            System.out.println(e);
-        }
+//        JSONParser jsonParser = new JSONParser();
+//        try{
+//            FileReader reader = new FileReader("./src/chatHistory/"+historyFileName);
+//            Object obj = jsonParser.parse(reader);
+//            JSONArray array = (JSONArray) obj;
+//            for (int i=0;i<array.size();i++) {
+//                JSONObject textObject = (JSONObject) array.get(i);
+//                String sender = (String) textObject.get("sender");
+//                String text = (String) textObject.get("text");
+//                if (sender.equals(talkTo)) {
+//                    displayReceiveMessage(text);
+//                }else{
+//                    displaySenderMessage(text);
+//                }
+//            }
+//        }catch(Exception e){
+//            System.out.println(e);
+//        }
 
 
         txtInput.setOnKeyPressed(event -> {
