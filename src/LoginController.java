@@ -34,6 +34,7 @@ public class LoginController implements Initializable {
     @FXML
     private Button btn_signUp;
 
+    private static String userID= "";
     @Override
     public void initialize(URL location, ResourceBundle resources) {
 
@@ -130,6 +131,9 @@ public class LoginController implements Initializable {
         DataInputStream dis = new DataInputStream(loginSocket.getInputStream());
         String str = dis.readUTF();
         System.out.println(str);
+        if(str.equals("true")){
+            setUserID(inputedId);
+        }
         loginSocket.close();
         return(str);
     }
@@ -175,6 +179,14 @@ public class LoginController implements Initializable {
     public void closeStage(){
         Stage stage = (Stage) btnUserEnter.getScene().getWindow();
         stage.close();
+    }
+
+    public void setUserID(String userID){
+        this.userID = userID;
+    }
+
+    public static String getUserID(){
+        return userID;
     }
 
 }

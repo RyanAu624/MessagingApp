@@ -1,3 +1,4 @@
+import com.sun.xml.internal.bind.v2.model.core.ID;
 import javafx.application.Platform;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -12,6 +13,9 @@ import javafx.scene.control.TextField;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
 
 import java.io.*;
 import java.net.Socket;
@@ -31,6 +35,8 @@ public class ChatController implements Initializable {
     private VBox messagePane;
 
     private static String talkTo="";
+
+    private static String historyFileName ="";
     @FXML
     public void initialize(URL location, ResourceBundle resources) {
 
@@ -54,6 +60,27 @@ public class ChatController implements Initializable {
         messagePane.heightProperty().addListener(event -> {
             scrollPane.setVvalue(1);
         });
+
+        //display history in start
+        JSONParser jsonParser = new JSONParser();
+        try{
+            FileReader reader = new FileReader("./src/chatHistory/"+historyFileName);
+            Object obj = jsonParser.parse(reader);
+            JSONArray array = (JSONArray) obj;
+            for (int i=0;i<array.size();i++) {
+                JSONObject textObject = (JSONObject) array.get(i);
+                String sender = (String) textObject.get("sender");
+                String text = (String) textObject.get("text");
+                if (sender.equals(talkTo)) {
+                    displayReceiveMessage(text);
+                }else{
+                    displaySenderMessage(text);
+                }
+            }
+        }catch(Exception e){
+            System.out.println(e);
+        }
+
 
         txtInput.setOnKeyPressed(event -> {
             if (event.getCode().toString().equals("ENTER"))
@@ -106,6 +133,8 @@ public class ChatController implements Initializable {
         });
     }
 
+
+
     private void displaySenderMessage() {
         Platform.runLater(() -> {
             String text = txtInput.getText();
@@ -137,4 +166,10 @@ public class ChatController implements Initializable {
     public String getReceiveName(){
         return talkTo;
     }
+
+
+    public void setHistoryName(String historyFileName){
+        this.historyFileName = historyFileName;
+    }
+
 }
