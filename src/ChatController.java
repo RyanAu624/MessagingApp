@@ -52,29 +52,32 @@ public class ChatController implements Initializable {
 
         children = messagePane.getChildren();
 
+        talkTo = sender.getTalkTo();
+        System.out.println("Receive"+talkTo);
         messagePane.heightProperty().addListener(event -> {
             scrollPane.setVvalue(1);
         });
 
         //display history in start
-//        JSONParser jsonParser = new JSONParser();
-//        try{
-//            FileReader reader = new FileReader("./src/chatHistory/"+historyFileName);
-//            Object obj = jsonParser.parse(reader);
-//            JSONArray array = (JSONArray) obj;
-//            for (int i=0;i<array.size();i++) {
-//                JSONObject textObject = (JSONObject) array.get(i);
-//                String sender = (String) textObject.get("sender");
-//                String text = (String) textObject.get("text");
-//                if (sender.equals(talkTo)) {
-//                    displayReceiveMessage(text);
-//                }else{
-//                    displaySenderMessage(text);
-//                }
-//            }
-//        }catch(Exception e){
-//            System.out.println(e);
-//        }
+        JSONParser jsonParser = new JSONParser();
+        try{
+            FileReader reader = new FileReader("./src/chatHistory/"+sender.getHistoryFileName());
+            Object obj = jsonParser.parse(reader);
+            JSONArray array = (JSONArray) obj;
+            for (int i=0;i<array.size();i++) {
+                JSONObject textObject = (JSONObject) array.get(i);
+                String sender = (String) textObject.get("sender");
+                System.out.println("Sender is "+sender);
+                String oldmessage = (String) textObject.get("text");
+                if (sender.equals(LoginController.getUserID())) {
+                    displayReceiveMessage(oldmessage);
+                }else{
+                    displaySenderOlsMessage(oldmessage);
+                }
+            }
+        }catch(Exception e){
+            System.out.println(e);
+        }
 
 
         txtInput.setOnKeyPressed(event -> {
@@ -113,6 +116,7 @@ public class ChatController implements Initializable {
 //        t.start();
     }
 
+    //display history sender mehtods
     private Node clientMessageNode(String text) {
         HBox hbox = new HBox();
         hbox.setAlignment(Pos.CENTER_RIGHT);
@@ -126,6 +130,14 @@ public class ChatController implements Initializable {
         hbox.getChildren().add(label);
 
         return hbox;
+    }
+
+
+    private void displaySenderOlsMessage(String oldtext) {
+        Platform.runLater(() -> {
+            children.add(clientMessageNode(oldtext));
+            msgIndex = (msgIndex + 1) % 2;
+        });
     }
 
     private Node serverMessageNode(String text) {
@@ -169,8 +181,6 @@ public class ChatController implements Initializable {
     }
 
 
-    public void setHistoryName(String historyFileName){
-        this.historyFileName = historyFileName;
-    }
+
 
 }

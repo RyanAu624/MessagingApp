@@ -1,3 +1,4 @@
+import javafx.application.Platform;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -65,7 +66,10 @@ public class MenuController implements Initializable {
         }
 
         //fileNameWithOutExt = "test.xml".replaceFirst("[.][^.]+$", "");
-        showChatHistory();
+        Platform.runLater(() -> {
+            showChatHistory();
+        });
+
 
 
         btn_addNewChat.setOnMouseClicked(event -> {
@@ -127,9 +131,10 @@ public class MenuController implements Initializable {
             btn_chatHistory.setStyle("-fx-font-size:22");
 
             String finalChatroomName = chatroomName;
+            int finalI = i;
             btn_chatHistory.setOnMouseClicked(event -> {
                 System.out.println("Clicked");
-            loadStage("chat.fxml", finalChatroomName);
+                loadStageForOldChat("chat.fxml", finalChatroomName,chatList.get(finalI));
             });
             Vbox_Menu.getChildren().add(btn_chatHistory);
         }
@@ -147,6 +152,24 @@ public class MenuController implements Initializable {
 
                 Sender sender = new Sender();
                 sender.setTalkTo(ID);
+            }
+        }catch (IOException e){
+            e.printStackTrace();
+        }
+    }
+
+    public void loadStageForOldChat(String fxml, String ID,String fileName){
+        try{
+            Parent root = FXMLLoader.load(getClass().getResource(fxml));
+            Stage stage = new Stage();
+            stage.setScene(new Scene(root));
+//            stage.initModality(Modality.APPLICATION_MODAL);
+            stage.setTitle(ID);
+            stage.show();
+            if(fxml.equals("chat.fxml")){
+                Sender sender = new Sender();
+                sender.setTalkTo(ID);
+                sender.setHistoryFileName(fileName);
             }
         }catch (IOException e){
             e.printStackTrace();

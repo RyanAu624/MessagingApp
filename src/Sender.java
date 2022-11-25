@@ -7,6 +7,7 @@ public class Sender {
 
     private static String talkTo="";
 
+    private static String historyFileName="";
     public void sendMessage(String message) {
         try {
             Socket socket = new Socket("127.0.0.1", 235);
@@ -42,5 +43,13 @@ public class Sender {
 
     public static void setTalkTo(String talkTo) {
         Sender.talkTo = talkTo;
+    }
+
+    public static String getHistoryFileName() {
+        return historyFileName;
+    }
+
+    public static void setHistoryFileName(String historyFileName) {
+        Sender.historyFileName = historyFileName;
     }
 }
