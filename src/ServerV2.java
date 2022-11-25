@@ -63,7 +63,7 @@ public class ServerV2 {
     public static void noteClientIP(String username, String clientIP) throws IOException, ParseException {
         //Add username and clientIP to JSON
         JSONParser jsonParser = new JSONParser();
-        FileReader reader = new FileReader("./src/login.json");
+        FileReader reader = new FileReader("./login.json");
 
         Object obj = jsonParser.parse(reader);
         JSONArray array = (JSONArray) obj;
@@ -83,7 +83,7 @@ public class ServerV2 {
             newObj.put("ip", clientIP);
             array.add(newObj);
             try {
-                FileWriter file = new FileWriter("./src/login.json");
+                FileWriter file = new FileWriter("./login.json");
                 file.write(array.toJSONString());
                 file.flush();
                 file.close();
@@ -118,7 +118,7 @@ public class ServerV2 {
     public static boolean checkLogin(Socket s, String username, String passwd) throws IOException, ParseException {
         DataOutputStream out = new DataOutputStream(s.getOutputStream());
         JSONParser jsonParser = new JSONParser();
-        FileReader reader = new FileReader("./src/user.json");
+        FileReader reader = new FileReader("./user.json");
         Object obj = jsonParser.parse(reader);
         JSONArray array = (JSONArray) obj;
         String foundData = "f";
@@ -146,7 +146,7 @@ public class ServerV2 {
     public static boolean checkName(Socket s, String username) throws IOException, ParseException {
         DataOutputStream out = new DataOutputStream(s.getOutputStream());
         JSONParser jsonParser = new JSONParser();
-        FileReader reader = new FileReader("./src/user.json");
+        FileReader reader = new FileReader("./user.json");
         Object obj = jsonParser.parse(reader);
         JSONArray array = (JSONArray) obj;
         String foundData = "f";
@@ -174,7 +174,7 @@ public class ServerV2 {
         //Add username and clientIP to JSON
         DataOutputStream out = new DataOutputStream(s.getOutputStream());
         JSONParser jsonParser = new JSONParser();
-        FileReader reader = new FileReader("./src/user.json");
+        FileReader reader = new FileReader("./user.json");
 
         Object obj = jsonParser.parse(reader);
         JSONArray array = (JSONArray) obj;
@@ -194,7 +194,7 @@ public class ServerV2 {
             newObj.put("password", password);
             array.add(newObj);
             try {
-                FileWriter file = new FileWriter("./src/user.json");
+                FileWriter file = new FileWriter("./user.json");
                 file.write(array.toJSONString());
                 file.flush();
                 file.close();

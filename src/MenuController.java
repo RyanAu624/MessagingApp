@@ -41,7 +41,7 @@ public class MenuController implements Initializable {
     public void initialize(URL location, ResourceBundle resources) {
         Label_userName.setText(userID);
         children = Vbox_Menu.getChildren();
-        File dir = new File("./src/chatHistory"); // directory = target directory.
+        File dir = new File("./chatHistory"); // directory = target directory.
         if(dir.exists()) // Directory exists then proceed.
         {
             Pattern p = Pattern.compile(userID); //

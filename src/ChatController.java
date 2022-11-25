@@ -1,4 +1,3 @@
-import com.sun.xml.internal.bind.v2.model.core.ID;
 import javafx.application.Platform;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -65,7 +64,7 @@ public class ChatController implements Initializable {
         Platform.runLater(() -> {
             JSONParser jsonParser = new JSONParser();
             try{
-                String way = "./src/chatHistory/"+getHistoryFileName();
+                String way = "./chatHistory/"+getHistoryFileName();
                 FileReader reader = new FileReader(way);
                 Object obj = jsonParser.parse(reader);
                 JSONArray array = (JSONArray) obj;
