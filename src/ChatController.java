@@ -34,9 +34,11 @@ public class ChatController implements Initializable {
     @FXML
     private VBox messagePane;
 
-//    private static String talkTo="";
+    private Sender sender;
     @FXML
     public void initialize(URL location, ResourceBundle resources) {
+
+        sender = new Sender();
 
         children = messagePane.getChildren();
 
@@ -60,43 +62,24 @@ public class ChatController implements Initializable {
                 System.out.println("selected");
                 System.out.println(file.getPath());
 
-                try {
-                    Socket socket = new Socket("127.0.0.1", 235);
-                    DataOutputStream out = new DataOutputStream(socket.getOutputStream());
-
-                    out.writeUTF(path.trim());
-                    out.flush();
-                } catch (UnknownHostException e) {
-                    throw new RuntimeException(e);
-                } catch (IOException e) {
-                    throw new RuntimeException(e);
-                }
+                sender.sendFile(path);
 
             }
         });
 
 //        Runnable runnable = () -> {
+//            Receiver receiver = new Receiver();
+//            String message;
 //            while (true) {
-//                try {
-//                    ServerSocket chatServer = new ServerSocket(1234);
-//                    Socket s = chatServer.accept();
-//                    System.out.println("Connected");
-//                    DataInputStream dis = new DataInputStream(s.getInputStream());
-//                    String receivedMessage = dis.readUTF();
-//                    System.out.println("Receive " + receivedMessage);
+//                message = receiver.receiveMessage();
 //
-//                    displayReceiveMessage(receivedMessage);
-//                } catch (IOException e) {
-//                    throw new RuntimeException(e);
+//                if (message.equals("")) {
+//                    displayReceiveMessage(message);
 //                }
 //            }
 //        };
 //        Thread t = new Thread(runnable);
 //        t.start();
-    }
-
-    private void getMessageHistory() {
-
     }
 
     private Node clientMessageNode(String text) {
@@ -136,7 +119,6 @@ public class ChatController implements Initializable {
     }
 
     private void displaySenderMessage() {
-
         Platform.runLater(() -> {
             String text = txtInput.getText();
             if (!text.isEmpty()) {
@@ -144,34 +126,12 @@ public class ChatController implements Initializable {
                 children.add(clientMessageNode(text));
                 msgIndex = (msgIndex + 1) % 2;
 
-                Sender sender = new Sender();
+            Runnable run = () -> {
                 sender.sendMessage(text);
-//                Runnable runnable = () -> {
-//                    try {
-//                        Socket socket = new Socket("127.0.0.1", 235);
-//                        DataOutputStream out = new DataOutputStream(socket.getOutputStream());
-//
-//                        String receiveName = getReceiveName();
-//
-//                        out.writeUTF("chat " + "senderName" + " " + receiveName + " " + text);
-//                        out.flush();
-//
-//                    } catch (IOException e) {
-//                        throw new RuntimeException(e);
-//                    }
-//                };
-//                Thread t = new Thread(runnable);
-//                t.start();
+            };
+            Thread t2 = new Thread(run);
+            t2.start();
             }
         });
-
     }
-
-//    public static void setID(String receiveName){
-//         talkTo = receiveName;
-//    }
-//
-//    public String getReceiveName(){
-//        return talkTo;
-//    }
 }
