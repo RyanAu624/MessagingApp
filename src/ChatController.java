@@ -13,13 +13,20 @@ import javafx.scene.control.TextField;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
+<<<<<<< HEAD
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
+=======
+import javafx.stage.FileChooser;
+import javafx.stage.Stage;
+>>>>>>> Testing
 
 import java.io.*;
+import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.URL;
+import java.net.UnknownHostException;
 import java.util.ResourceBundle;
 
 public class ChatController implements Initializable {
@@ -34,26 +41,17 @@ public class ChatController implements Initializable {
     @FXML
     private VBox messagePane;
 
+<<<<<<< HEAD
     private static String talkTo="";
 
     private static String historyFileName ="";
+=======
+    private Sender sender;
+>>>>>>> Testing
     @FXML
     public void initialize(URL location, ResourceBundle resources) {
 
-//        Thread t = new Thread(() -> {
-//            try {
-//                Socket socket = new Socket("127.0.0.1", 235);
-//                DataInputStream in = new DataInputStream(socket.getInputStream());
-//                String receivedMessage = in.readUTF();
-//                System.out.println("Receive " + receivedMessage);
-//
-//                children.add(serverMessageNode(receivedMessage));
-//                msgIndex = (msgIndex + 1) % 2;
-//            } catch (IOException e) {
-//                throw new RuntimeException(e);
-//            }
-//        });
-//        t.start();
+        sender = new Sender();
 
         children = messagePane.getChildren();
 
@@ -85,12 +83,37 @@ public class ChatController implements Initializable {
         txtInput.setOnKeyPressed(event -> {
             if (event.getCode().toString().equals("ENTER"))
                 displaySenderMessage();
-                System.out.println("This is "+getReceiveName());
-
         });
 
         btnFile.setOnMouseClicked(event -> {
+            FileChooser chooser = new FileChooser();
+            Stage stage = new Stage();
+            File file = chooser.showOpenDialog(stage);
+
+            if (file != null) {
+//            dataOutputStream.writeUTF(file.getPath());
+                String path = file.getPath();
+                System.out.println("selected");
+                System.out.println(file.getPath());
+
+                sender.sendFile(path);
+
+            }
         });
+
+//        Runnable runnable = () -> {
+//            Receiver receiver = new Receiver();
+//            String message;
+//            while (true) {
+//                message = receiver.receiveMessage();
+//
+//                if (message.equals("")) {
+//                    displayReceiveMessage(message);
+//                }
+//            }
+//        };
+//        Thread t = new Thread(runnable);
+//        t.start();
     }
 
     private Node clientMessageNode(String text) {
@@ -124,12 +147,8 @@ public class ChatController implements Initializable {
 
     public void displayReceiveMessage(String text) {
         Platform.runLater(() -> {
-
-            if (!text.isEmpty()) {
-                txtInput.clear();
-                children.add(serverMessageNode(text));
-                msgIndex = (msgIndex + 1) % 2;
-            }
+            children.add(serverMessageNode(text));
+            msgIndex = (msgIndex + 1) % 2;
         });
     }
 
@@ -142,29 +161,14 @@ public class ChatController implements Initializable {
                 txtInput.clear();
                 children.add(clientMessageNode(text));
                 msgIndex = (msgIndex + 1) % 2;
-                try {
-                    Socket socket = new Socket("127.0.0.1", 235);
-                    DataOutputStream out = new DataOutputStream(socket.getOutputStream());
 
-                    String receiveName = getReceiveName();
-
-                    out.writeUTF("chat " + "senderNameee" + " " + receiveName + " " + text);
-                    out.flush();
-
-                } catch (IOException e) {
-                    throw new RuntimeException(e);
-                }
+            Runnable run = () -> {
+                sender.sendMessage(text);
+            };
+            Thread t2 = new Thread(run);
+            t2.start();
             }
         });
-
-    }
-
-    public static void setID(String receiveName){
-         talkTo = receiveName;
-    }
-
-    public String getReceiveName(){
-        return talkTo;
     }
 
 

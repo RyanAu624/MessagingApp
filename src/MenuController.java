@@ -141,10 +141,17 @@ public class MenuController implements Initializable {
             Stage stage = new Stage();
             stage.setScene(new Scene(root));
 //            stage.initModality(Modality.APPLICATION_MODAL);
+            stage.setTitle(ID);
             stage.show();
             if(fxml.equals("chat.fxml")){
+<<<<<<< HEAD
                 ChatController.setID(ID);
                 stage.setTitle(ID);
+=======
+                Sender sender = new Sender();
+                sender.setTalkTo(ID);
+//                ChatController.setID(ID);
+>>>>>>> Testing
             }
         }catch (IOException e){
             e.printStackTrace();

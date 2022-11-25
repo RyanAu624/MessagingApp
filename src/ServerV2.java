@@ -3,6 +3,8 @@ import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 
+import javax.imageio.ImageIO;
+import java.awt.image.BufferedImage;
 import java.io.*;
 import java.net.*;
 
@@ -38,13 +40,24 @@ public class ServerV2 {
                 checkName(s,str[1]);
             }else if (str[0].equals("NewAC")) {
                 newUser(s, str[1],str[2]);
-            }else {
+            } else if (str[0].startsWith("/")) {
+                receiveImage(str[0]);
+            } else {
                 System.out.println("wong message type");
             }
 
             chatServer.close();
         }
 
+    }
+
+    public static void receiveImage(String file) {
+        try {
+            BufferedImage sendImage = ImageIO.read(new File(file));
+            System.out.println(sendImage);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     public static void noteClientIP(String username, String clientIP) throws IOException, ParseException {
@@ -85,10 +98,21 @@ public class ServerV2 {
     }
 
     public static void receiveThenSend(Socket s, String senderName, String receiveName, String message) throws IOException {
-//        DataOutputStream out = new DataOutputStream(s.getOutputStream());
-//        out.writeUTF(message);
-//        out.flush();
-        System.out.println(senderName + "    " + message + "    " + receiveName);
+//        Runnable runnable = () -> {
+//            try {
+//                Socket socket = new Socket("127.0.0.1", 236);
+//                DataOutputStream out = new DataOutputStream(socket.getOutputStream());
+//
+//                out.writeUTF(message);
+//                out.flush();
+//                System.out.println(senderName + "    " + message + "    " + receiveName);
+//            } catch (IOException e) {
+//                throw new RuntimeException(e);
+//            }
+//        };
+//        Thread t = new Thread(runnable);
+//        t.start();
+                System.out.println(message + "    " + receiveName);
     }
 
     public static boolean checkLogin(Socket s, String username, String passwd) throws IOException, ParseException {
