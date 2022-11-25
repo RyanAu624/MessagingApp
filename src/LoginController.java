@@ -35,6 +35,8 @@ public class LoginController implements Initializable {
     private Button btn_signUp;
 
     private static String userID= "";
+
+    Sender sender = new Sender();
     @Override
     public void initialize(URL location, ResourceBundle resources) {
 
@@ -133,6 +135,8 @@ public class LoginController implements Initializable {
         System.out.println(str);
         if(str.equals("true")){
             setUserID(inputedId);
+
+            sender.setSender(inputedId);
         }
         loginSocket.close();
         return(str);

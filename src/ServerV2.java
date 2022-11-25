@@ -112,7 +112,7 @@ public class ServerV2 {
 //        };
 //        Thread t = new Thread(runnable);
 //        t.start();
-                System.out.println(message + "    " + receiveName);
+                System.out.println(senderName + "    " + message + "    " + receiveName);
     }
 
     public static boolean checkLogin(Socket s, String username, String passwd) throws IOException, ParseException {

@@ -7,6 +7,8 @@ public class Sender {
 
     private static String talkTo="";
 
+    private static String sender;
+
     private static String historyFileName="";
     public void sendMessage(String message) {
         try {
@@ -14,8 +16,9 @@ public class Sender {
             DataOutputStream out = new DataOutputStream(socket.getOutputStream());
 
             String receiveName = getTalkTo();
+            String senderName = getSender();
 
-            out.writeUTF("chat " + "senderName" + " " + receiveName + " " + message);
+            out.writeUTF("chat " + senderName + " " + receiveName + " " + message);
             out.flush();
 
         } catch (IOException e) {
@@ -35,6 +38,14 @@ public class Sender {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    public static String getSender() {
+        return sender;
+    }
+
+    public static void setSender(String sender) {
+        Sender.sender = sender;
     }
 
     public static String getTalkTo() {
